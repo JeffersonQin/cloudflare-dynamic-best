@@ -1,4 +1,6 @@
-# Dynamic Best Cloudflare
+# Dynamic Best Cloudflare (自动设置 Cloudflare 优选 IP)
+
+[中文 README](README.zh.md)
 
 A tool to automatically select best Cloudflare IP for a Cloudflare DNS record.
 
