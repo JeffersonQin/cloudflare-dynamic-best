@@ -1,0 +1,32 @@
+cloudflare:
+  # X_AUTH_KEY, check documentation of cloudflare
+  x_auth_key: 
+  # ZONE ID, on the lower right corner of domain page
+  zone_id:
+  # Cloudflare Email address
+  email:
+  # Cloudflare DNS record name
+  dns_record_name:
+  # Cloudflare DNS record, full url
+  website_url:
+  # Interval of speedtest on success
+  interval: 600
+  # Interval of speedtest on error
+  retry_interval: 10
+  # the raw IP which is the fallback when cloudflare has no speed
+  fallback_raw: 
+email:
+  # whether to enable email notification when using fallback plan
+  enable: true
+  # email to notify
+  email:
+  # smtp username
+  smtp_username:
+  # smtp password
+  smtp_password:
+  # smtp server
+  smtp_server:
+  subject_success: [Success] Best Cloudflare IP has been selected 
+  body_success: "Cloudflare IP switched to: %IP%"
+  subject_failed: [Warning] Fallback IP is being used, use with care
+  body_failed: "Fallback IP is being used: %IP%"

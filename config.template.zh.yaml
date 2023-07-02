@@ -1,0 +1,32 @@
+cloudflare:
+  # X_AUTH_KEY，见 Cloudflare 文档
+  x_auth_key:
+  # 域名的 Zone ID，在域名页的右下角
+  zone_id:
+  # Cloudflare 邮箱
+  email:
+  # Cloudflare DNS Record 的记录名
+  dns_record_name:
+  # Cloudflare DNS Record 的 URL
+  website_url:
+  # 成功时测速间隔
+  interval: 600
+  # 失败的重试间隔
+  retry_interval: 10
+  # 当 Cloudflare 没有速度时，fallback 到裸的 IP 地址
+  fallback_raw:
+email:
+  # 是否开启裸 IP 邮件提醒
+  enable: true
+  # 邮件提醒的邮箱
+  email:
+  # smtp 用户名，QQ 邮箱即为邮箱
+  smtp_username: 
+  # smtp 密码
+  smtp_password: 
+  # smtp 邮件服务器
+  smtp_server:
+  subject_success: 【成功】IP已切换为Cloudflare优选，放心使用
+  body_success: "IP 已切换为 CF 优选: %IP%"
+  subject_failed: 【警告】线路已切换为裸IP，谨慎使用
+  body_failed: "IP 已切换为裸 IP: %IP%"
