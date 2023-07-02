@@ -180,6 +180,7 @@ async fn update_dns_record(
     let response = client
         .get(&url)
         .headers(headers.clone())
+        .timeout(Duration::new(10, 0))
         .send()
         .await?
         .json::<serde_json::Value>()
@@ -220,6 +221,7 @@ async fn update_dns_record(
     let response = client
         .put(&update_url)
         .headers(headers)
+        .timeout(Duration::new(10, 0))
         .json(&dns_record)
         .send()
         .await?
@@ -289,6 +291,7 @@ fn send_email(config: &Config, ip: String) -> Result<(), Box<dyn Error>> {
     let mailer = SmtpTransport::relay(&config.email.smtp_server)
         .unwrap()
         .credentials(creds)
+        .timeout(Some(Duration::new(10, 0)))
         .build();
 
     match mailer.send(&email) {

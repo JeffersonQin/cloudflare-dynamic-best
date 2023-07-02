@@ -1,10 +1,10 @@
 [package]
 name = "cf-dynamic-best"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Haoyun Qin <gyrojeff@foxmail.com>"]
 license = "MIT"
-description = "A tool to automatically set best Cloudflare IP for a Cloudflare DNS record"
+description = "A tool to automatically select best Cloudflare IP for a Cloudflare DNS record"
 homepage = "https://github.com/JeffersonQin/cloudflare-dynamic-best"
 repository = "https://github.com/JeffersonQin/cloudflare-dynamic-best"
 keywords = ["cli", "cloudflare", "dns", "ip"]
