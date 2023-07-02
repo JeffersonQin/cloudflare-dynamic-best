@@ -263,7 +263,7 @@ fn get_time_str() -> String {
 fn send_email(config: &Config, ip: String) -> Result<(), Box<dyn Error>> {
     println!("{} : {}", get_time_str(), "Try to send email notification");
 
-    let subject = if config.cloudflare.fallback_raw == ip {
+    let subject = if config.cloudflare.fallback_raw != ip {
         config.email.subject_success.replace("%IP%", &ip)
     } else {
         config.email.subject_failed.replace("%IP%", &ip)
