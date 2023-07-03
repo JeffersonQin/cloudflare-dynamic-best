@@ -396,6 +396,12 @@ async fn main() {
             Err(e) => {
                 println!("{} : {}", get_time_str(), "UPDATE DNS RECORD FAILED".red());
                 println!("Error Info: {}", e.to_string().red());
+                let _ = send_email(
+                    &config,
+                    &config.email.on_error,
+                    "".to_string(),
+                    e.to_string(),
+                );
                 thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
                 continue;
             }

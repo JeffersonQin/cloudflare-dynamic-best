@@ -1,6 +1,6 @@
 [package]
 name = "cf-dynamic-best"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 authors = ["Haoyun Qin <gyrojeff@foxmail.com>"]
 license = "MIT"
