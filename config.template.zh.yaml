@@ -16,8 +16,26 @@ cloudflare:
   # 当 Cloudflare 没有速度时，fallback 到裸的 IP 地址
   fallback_raw:
 email:
-  # 是否开启裸 IP 邮件提醒
-  enable: true
+  # 当从 fallback 切换回 Cloudflare 代理
+  on_recovery:
+    enable: true
+    subject: 【成功】IP已切换为Cloudflare优选，放心使用
+    body: "IP 已切换为 CF 优选: %IP%"
+  # 使用 fallback
+  on_fallback:
+    enable: true
+    subject: 【警告】线路已切换为裸IP，谨慎使用
+    body: "IP 已切换为裸 IP: %IP%"
+  # 发生错误提醒
+  on_error: 
+    enable: true
+    subject: 【错误】Cloudflare优选脚本故障
+    body: "故障信息: %ERROR%"
+  # 检测到 Cloudflare 没有速度时（即将启用 fallback）的提醒
+  on_cloudflare_no_speed: 
+    enbale: true
+    subject: 【预警】检测到Cloudflare没有速度
+    body: "检测到Cloudflare没有速度"
   # 邮件提醒的邮箱
   email:
   # smtp 用户名，QQ 邮箱即为邮箱
@@ -26,7 +44,3 @@ email:
   smtp_password: 
   # smtp 邮件服务器
   smtp_server:
-  subject_success: 【成功】IP已切换为Cloudflare优选，放心使用
-  body_success: "IP 已切换为 CF 优选: %IP%"
-  subject_failed: 【警告】线路已切换为裸IP，谨慎使用
-  body_failed: "IP 已切换为裸 IP: %IP%"

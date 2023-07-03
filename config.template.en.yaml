@@ -16,8 +16,26 @@ cloudflare:
   # the raw IP which is the fallback when cloudflare has no speed
   fallback_raw: 
 email:
-  # whether to enable email notification when using fallback plan
-  enable: true
+  # notification when switched from fallback to cloudflare
+  on_recovery:
+    enable: true
+    subject: [Success] Best Cloudflare IP has been selected
+    body: "Cloudflare IP switched to: %IP%"
+  # notification when switched to fallback
+  on_fallback:
+    enable: true
+    subject: [Warning] Fallback IP is being used, use with care
+    body: "Fallback IP is being used: %IP%"
+  # notification on error happened
+  on_error: 
+    enable: true
+    subject: [Error] Cloudflare Dynamic Best
+    body: "Error: %ERROR%"
+  # notification when cloudflare lacks speed
+  on_cloudflare_no_speed: 
+    enbale: true
+    subject: [Warning] Cloudflare lack speed
+    body: "Cloudflare no speed detected"
   # email to notify
   email:
   # smtp username
@@ -26,7 +44,3 @@ email:
   smtp_password:
   # smtp server
   smtp_server:
-  subject_success: [Success] Best Cloudflare IP has been selected 
-  body_success: "Cloudflare IP switched to: %IP%"
-  subject_failed: [Warning] Fallback IP is being used, use with care
-  body_failed: "Fallback IP is being used: %IP%"

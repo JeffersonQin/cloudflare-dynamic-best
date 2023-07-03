@@ -54,10 +54,17 @@ struct EmailConfig {
     smtp_username: String,
     smtp_password: String,
     smtp_server: String,
-    subject_success: String,
-    body_success: String,
-    subject_failed: String,
-    body_failed: String,
+    on_recovery: EmailPolicy,
+    on_fallback: EmailPolicy,
+    on_error: EmailPolicy,
+    on_cloudflare_no_speed: EmailPolicy,
+}
+
+#[derive(Debug, Deserialize)]
+struct EmailPolicy {
+    enable: bool,
+    subject: String,
+    body: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -260,19 +267,23 @@ fn get_time_str() -> String {
     return formatted_time;
 }
 
-fn send_email(config: &Config, ip: String) -> Result<(), Box<dyn Error>> {
+fn send_email(
+    config: &Config,
+    policy: &EmailPolicy,
+    ip: String,
+    error: String,
+) -> Result<(), Box<dyn Error>> {
+    if !policy.enable {
+        return Ok(());
+    }
+
     println!("{} : {}", get_time_str(), "Try to send email notification");
 
-    let subject = if config.cloudflare.fallback_raw != ip {
-        config.email.subject_success.replace("%IP%", &ip)
-    } else {
-        config.email.subject_failed.replace("%IP%", &ip)
-    };
-    let body = if config.cloudflare.fallback_raw == ip {
-        config.email.body_success.replace("%IP%", &ip)
-    } else {
-        config.email.body_failed.replace("%IP%", &ip)
-    };
+    let subject = policy
+        .subject
+        .replace("%IP%", &ip)
+        .replace("%ERROR%", &error);
+    let body = policy.body.replace("%IP%", &ip).replace("%ERROR%", &error);
 
     let email = Message::builder()
         .from(config.email.email.clone().parse().unwrap())
@@ -320,6 +331,12 @@ async fn main() {
                     "DELETE LAST EXECUTION FILE FAILED".red()
                 );
                 println!("Error Info: {}", e.to_string().red());
+                let _ = send_email(
+                    &config,
+                    &config.email.on_error,
+                    "".to_string(),
+                    e.to_string(),
+                );
                 thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
                 continue;
             }
@@ -330,6 +347,12 @@ async fn main() {
             Err(e) => {
                 println!("{} : {}", get_time_str(), "RUN TOOL FAILED".red());
                 println!("Error Info: {}", e.to_string().red());
+                let _ = send_email(
+                    &config,
+                    &config.email.on_error,
+                    "".to_string(),
+                    e.to_string(),
+                );
                 thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
                 continue;
             }
@@ -340,11 +363,23 @@ async fn main() {
             Err(e) => {
                 println!("{} : {}", get_time_str(), "PARSE CSV RESULT FAILED".red());
                 println!("Error Info: {}", e.to_string().red());
+                let _ = send_email(
+                    &config,
+                    &config.email.on_error,
+                    "".to_string(),
+                    e.to_string(),
+                );
                 thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
                 continue;
             }
             Ok((ip, download_speed)) => {
                 if download_speed < 0.05 {
+                    let _ = send_email(
+                        &config,
+                        &config.email.on_cloudflare_no_speed,
+                        config.cloudflare.fallback_raw.clone(),
+                        "".to_string(),
+                    );
                     config.cloudflare.fallback_raw.clone()
                 } else {
                     ip
@@ -378,7 +413,12 @@ async fn main() {
         // 2. `using_raw` changed
         if config.email.enable {
             if current_using_raw ^ using_raw {
-                match send_email(&config, ip.clone()) {
+                let policy = if current_using_raw {
+                    &config.email.on_fallback
+                } else {
+                    &config.email.on_recovery
+                };
+                match send_email(&config, policy, ip.clone(), "".to_string()) {
                     Err(e) => {
                         println!("{} : {}", get_time_str(), "SEND EMAIL FAILED".red());
                         println!("Error Info: {}", e.to_string().red());
