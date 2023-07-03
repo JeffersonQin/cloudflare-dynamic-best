@@ -33,7 +33,7 @@ email:
     body: "故障信息: %ERROR%"
   # 检测到 Cloudflare 没有速度时（即将启用 fallback）的提醒
   on_cloudflare_no_speed: 
-    enbale: true
+    enable: true
     subject: 【预警】检测到Cloudflare没有速度
     body: "检测到Cloudflare没有速度"
   # 邮件提醒的邮箱

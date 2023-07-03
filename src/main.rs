@@ -49,7 +49,6 @@ struct CloudflareConfig {
 
 #[derive(Debug, Deserialize)]
 struct EmailConfig {
-    enable: bool,
     email: String,
     smtp_username: String,
     smtp_password: String,
@@ -409,27 +408,24 @@ async fn main() {
             }
         };
         // send email if
-        // 1. functionality is enabled
-        // 2. `using_raw` changed
-        if config.email.enable {
-            if current_using_raw ^ using_raw {
-                let policy = if current_using_raw {
-                    &config.email.on_fallback
-                } else {
-                    &config.email.on_recovery
-                };
-                match send_email(&config, policy, ip.clone(), "".to_string()) {
-                    Err(e) => {
-                        println!("{} : {}", get_time_str(), "SEND EMAIL FAILED".red());
-                        println!("Error Info: {}", e.to_string().red());
-                        thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
-                        continue;
-                        // if send email failed, we should not update `using_raw`
-                        // so that we can send email next time
-                    }
-                    Ok(_) => {
-                        using_raw = current_using_raw;
-                    }
+        // `using_raw` changed
+        if current_using_raw ^ using_raw {
+            let policy = if current_using_raw {
+                &config.email.on_fallback
+            } else {
+                &config.email.on_recovery
+            };
+            match send_email(&config, policy, ip.clone(), "".to_string()) {
+                Err(e) => {
+                    println!("{} : {}", get_time_str(), "SEND EMAIL FAILED".red());
+                    println!("Error Info: {}", e.to_string().red());
+                    thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
+                    continue;
+                    // if send email failed, we should not update `using_raw`
+                    // so that we can send email next time
+                }
+                Ok(_) => {
+                    using_raw = current_using_raw;
                 }
             }
         }

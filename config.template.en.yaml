@@ -33,7 +33,7 @@ email:
     body: "Error: %ERROR%"
   # notification when cloudflare lacks speed
   on_cloudflare_no_speed: 
-    enbale: true
+    enable: true
     subject: [Warning] Cloudflare lack speed
     body: "Cloudflare no speed detected"
   # email to notify
