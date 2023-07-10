@@ -187,7 +187,7 @@ async fn update_dns_record(
     let response = client
         .get(&url)
         .headers(headers.clone())
-        .timeout(Duration::new(10, 0))
+        .timeout(Duration::new(60, 0))
         .send()
         .await?
         .json::<serde_json::Value>()
@@ -228,7 +228,7 @@ async fn update_dns_record(
     let response = client
         .put(&update_url)
         .headers(headers)
-        .timeout(Duration::new(10, 0))
+        .timeout(Duration::new(60, 0))
         .json(&dns_record)
         .send()
         .await?
