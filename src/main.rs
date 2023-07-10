@@ -388,6 +388,7 @@ async fn main() {
                         );
                         // fallback is not enabled, just wait
                         thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
+                        continue;
                     }
                     config.cloudflare.fallback_raw.clone()
                 } else {
