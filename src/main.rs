@@ -45,6 +45,7 @@ struct CloudflareConfig {
     interval: u64,
     retry_interval: u64,
     fallback_raw: String,
+    fallback_raw_enabled: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -379,6 +380,15 @@ async fn main() {
                         config.cloudflare.fallback_raw.clone(),
                         "".to_string(),
                     );
+                    if !config.cloudflare.fallback_raw_enabled {
+                        println!(
+                            "{} : {}",
+                            get_time_str(),
+                            "No speed, fallback disabled, wait".red()
+                        );
+                        // fallback is not enabled, just wait
+                        thread::sleep(Duration::from_secs(config.cloudflare.retry_interval));
+                    }
                     config.cloudflare.fallback_raw.clone()
                 } else {
                     ip

@@ -15,6 +15,8 @@ cloudflare:
   retry_interval: 10
   # the raw IP which is the fallback when cloudflare has no speed
   fallback_raw: 
+  # whether to enable raw ip fallback
+  fallback_raw_enabled: false
 email:
   # notification when switched from fallback to cloudflare
   on_recovery:

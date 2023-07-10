@@ -15,6 +15,8 @@ cloudflare:
   retry_interval: 10
   # 当 Cloudflare 没有速度时，fallback 到裸的 IP 地址
   fallback_raw:
+  # 是否开启裸 IP fallback
+  fallback_raw_enabled: false
 email:
   # 当从 fallback 切换回 Cloudflare 代理
   on_recovery:
